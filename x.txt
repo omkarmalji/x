@@ -1,0 +1,448 @@
+S1. Q1
+
+import java.io.*;
+
+public class UpperToLowerDecorator 
+{
+    public static void main(String[] args) 
+    {
+        try 
+        {
+            InputStream inputStream = new FileInputStream("Input.txt");
+            OutputStream outputStream = new FileOutputStream("Output.txt");
+
+            InputStream decoratedInput = new UppercaseToLowercaseInputStream(inputStream);
+            OutputStream decoratedOutput = new UppercaseToLowercaseOutputStream(outputStream);
+
+            int data;
+            while ((data = decoratedInput.read()) != -1) 
+            {
+                decoratedOutput.write(data);
+            }
+
+             inputStream.close();
+            outputStream.close();
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+    }
+}
+
+class UppercaseToLowercaseInputStream extends FilterInputStream 
+{
+    protected UppercaseToLowercaseInputStream(InputStream in) 
+    {
+        super(in);
+    }
+
+    public int read() throws IOException 
+    {
+        int data = super.read();
+        if (data != -1) 
+        {
+            if (Character.isUpperCase(data)) 
+            {
+                data = Character.toLowerCase(data);
+            }
+        }
+        return data;
+    }
+}
+
+class UppercaseToLowercaseOutputStream extends FilterOutputStream 
+{
+    protected UppercaseToLowercaseOutputStream(OutputStream out) 
+    {
+        super(out);
+    }
+
+    public void write(int data) throws IOException 
+    {
+        // Check if the data is uppercase before converting to lowercase
+        if (Character.isUpperCase((char) data)) 
+        {
+            data = Character.toLowerCase((char) data);
+        }
+        super.write(data);
+    }
+}
+
+
+Q2.
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from sklearn.datasets import load_iris
+
+iris = load_iris()
+
+df = pd.DataFrame(data=np.c_[iris['data'], iris['target']],
+                   columns=iris['feature_names'] + ['target'])
+
+sepal_length = df['sepal_length']
+sepal_width = df['sepal_width']
+
+plt.scatter(sepal_length, sepal_width)
+
+plt.title('Sepal Length vs. Sepal Width')
+plt.xlabel('Sepal Length (cm)')
+plt.ylabel('Sepal Width (cm)')
+
+plt.show()
+
+Q3. 
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation</title>
+</head>
+
+<body>
+    <form id="student-registration-form">
+        <label for="first-name">First Name:</label><br>
+        <input type="text" id="first-name" name="first-name"><br>
+        <label for="last-name">Last Name:</label><br>
+        <input type="text" id="last-name" name="last-name"><br>
+        <label for="age">Age:</label><br>
+        <input type="number" id="age" name="age"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <script>
+        function validateName(name) {
+            const nameRegex = /^[a-zA-Z]+$/;
+            return nameRegex.test(name);
+        }
+
+        function validateAge(age) {
+            if (age >= 18 && age <= 50) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        document.getElementById('student-registration-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // prevent the form from being submitted
+
+            const firstName = document.getElementById('first-name').value;
+            const lastName = document.getElementById('last-name').value;
+            const age = document.getElementById('age').value;
+
+            if (validateName(firstName) && validateName(lastName) && validateAge(age)) {
+                // form is valid, submit the form
+                this.submit();
+            } else {
+                // form is invalid, display an error message
+                alert('Invalid form data. Please enter a valid first and last name and an age between 18 and 50.');
+            }
+        });
+    </script>
+
+    <form id="employee-registration-form">
+        <label for="dob">Date of Birth:</label><br>
+        <input type="date" id="dob" name="dob"><br>
+        <label for="joining-date">Joining Date:</label><br>
+        <input type="date" id="joining-date" name="joining-date"><br>
+        <label for="salary">Salary:</label><br>
+        <input type="number" id="salary" name="salary"><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+
+    <script>
+        function validateSalary(salary) {
+            if (salary > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function validateDates(dob, joiningDate) {
+            const dobDate = new Date(dob);
+            const joiningDateDate = new Date(joiningDate);
+
+            if (dobDate < joiningDateDate) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function validateEmail(email) {
+            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            return emailRegex.test(email);
+        }
+
+        document.getElementById('employee-registration-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // prevent the form from being submitted
+
+            const dob = document.getElementById('dob').value;
+            const joiningDate = document.getElementById('joining-date').value;
+            const salary = document.getElementById('salary').value;
+            const email = document.getElementById('email').value;
+
+            if (validateDates(dob, joiningDate) && validateSalary(salary) && validateEmail(email)) {
+                // form is valid, submit the form
+                this.submit();
+            } else {
+                // form is invalid, display an error message
+                alert('Invalid form data. Please enter a valid DOB and joining date, a salary greater than zero, and a valid email address.');
+            }
+        });
+    </script>
+
+</body>
+
+</html>
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+S2. Q1.
+
+
+public class Singleton {
+
+    private static Singleton instance;
+
+    private Singleton() {
+    }
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            synchronized (Singleton.class) {
+                if (instance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+}
+
+
+Q2.
+
+
+import pandas as pd
+
+# Read the data from a CSV file
+df = pd.read_csv('data.csv')
+
+# Find all null values in the dataset
+null_values = df.isnull().sum()
+
+# Remove all rows with null values
+df = df.dropna()
+
+# Save the cleaned data to a new CSV file
+df.to_csv('clean_data.csv', index=False)
+
+
+Q3.
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation</title>
+</head>
+
+<body>
+    <form id="student-registration-form">
+        <label for="first-name">First Name:</label><br>
+        <input type="text" id="first-name" name="first-name"><br>
+        <label for="last-name">Last Name:</label><br>
+        <input type="text" id="last-name" name="last-name"><br>
+        <label for="age">Age:</label><br>
+        <input type="number" id="age" name="age"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <script>
+        function validateName(name) {
+            const nameRegex = /^[a-zA-Z]+$/;
+            return nameRegex.test(name);
+        }
+
+        function validateAge(age) {
+            if (age >= 18 && age <= 50) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        document.getElementById('student-registration-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // prevent the form from being submitted
+
+            const firstName = document.getElementById('first-name').value;
+            const lastName = document.getElementById('last-name').value;
+            const age = document.getElementById('age').value;
+
+            if (validateName(firstName) && validateName(lastName) && validateAge(age)) {
+                // form is valid, submit the form
+                this.submit();
+            } else {
+                // form is invalid, display an error message
+                alert('Invalid form data. Please enter a valid first and last name and an age between 18 and 50.');
+            }
+        });
+    </script>
+
+    <form id="employee-registration-form">
+        <label for="dob">Date of Birth:</label><br>
+        <input type="date" id="dob" name="dob"><br>
+        <label for="joining-date">Joining Date:</label><br>
+        <input type="date" id="joining-date" name="joining-date"><br>
+        <label for="salary">Salary:</label><br>
+        <input type="number" id="salary" name="salary"><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+
+    <script>
+        function validateSalary(salary) {
+            if (salary > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function validateDates(dob, joiningDate) {
+            const dobDate = new Date(dob);
+            const joiningDateDate = new Date(joiningDate);
+
+            if (dobDate < joiningDateDate) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function validateEmail(email) {
+            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            return emailRegex.test(email);
+        }
+
+        document.getElementById('employee-registration-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // prevent the form from being submitted
+
+            const dob = document.getElementById('dob').value;
+            const joiningDate = document.getElementById('joining-date').value;
+            const salary = document.getElementById('salary').value;
+            const email = document.getElementById('email').value;
+
+            if (validateDates(dob, joiningDate) && validateSalary(salary) && validateEmail(email)) {
+                // form is valid, submit the form
+                this.submit();
+            } else {
+                // form is invalid, display an error message
+                alert('Invalid form data. Please enter a valid DOB and joining date, a salary greater than zero, and a valid email address.');
+            }
+        });
+    </script>
+
+</body>
+
+</html>
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+S3. Q1.
+
+
+import java.util.Observable;
+
+public class WeatherData extends Observable {
+
+    private double temperature;
+    private double humidity;
+    private double pressure;
+
+    public WeatherData() {
+        this.temperature = 0;
+        this.humidity = 0;
+        this.pressure = 0;
+    }
+
+    public void measurementsChanged() {
+        setChanged();
+        notifyObservers();
+    }
+
+    public void setMeasurements(double temperature, double humidity, double pressure) {
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.pressure = pressure;
+        measurementsChanged();
+    }
+
+    public double getTemperature() {
+        return temperature;
+    }
+
+    public double getHumidity() {
+        return humidity;
+    }
+
+    public double getPressure() {
+        return pressure;
+    }
+}
+
+
+Q2.
+
+import pandas as pd
+
+df = pd.DataFrame({'Gender': ['Male', 'Female', 'Male', 'Female'], 'Age': [21, 25, 24, 28]})
+
+df = pd.get_dummies(df)
+
+print(df)
+
+
+Q3.
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+</head>
+<body>
+  <form name="myForm" onsubmit="return validateEmail()">
+    Email: <input type="text" name="email"><br>
+    <input type="submit" value="Login">
+  </form>
+  <script>
+    function validateEmail() {
+      var email = document.myForm.email.value;
+      var regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (!regex.test(email)) {
+        alert("Please enter a valid email address.");
+        return false;
+      }
+      return true;
+    }
+  </script>
+</body>
+</html>
